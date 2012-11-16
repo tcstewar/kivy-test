@@ -1,0 +1,39 @@
+#:kivy 1.0
+
+<Axes>:
+    canvas:
+        StencilPush
+        
+        Rectangle:
+            pos: 50,50
+            size: 100,100
+                
+        StencilUse
+            
+    
+        Color:
+            rgb: 1, 1, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size   
+            
+        StencilPop     
+
+
+<Plotter>:
+    canvas:
+        Color:
+            rgb: .5, .5, .5
+        Rectangle:
+            pos: self.pos
+            size: self.size
+                
+    axes: axes            
+    Axes:
+        id: axes
+        margin: 50        
+        pos: self.parent.x+self.margin, self.parent.y+self.margin
+        size: self.parent.width-self.margin*2, self.parent.height-self.margin*2
+
+            
+
