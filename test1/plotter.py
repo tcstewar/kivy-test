@@ -39,9 +39,15 @@ class Axes(Widget):
         super(Axes, self).__init__(**kwargs)
         self.lines = []
         Clock.schedule_interval(self.do_fade, 1.0/60)
+        self.bind(size=self.recompute_lines)
         
     def plot(self, data, hue):
         self.lines.append(LineInfo(self, data, hue))
+        
+    def recompute_lines(self,width,height):
+        for line in self.lines:
+            line.recompute()
+    
         
     def do_fade(self,dt):
         for line in self.lines:
