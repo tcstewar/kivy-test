@@ -1,16 +1,20 @@
 from kivy.app import App
 from kivy.clock import Clock
+from kivy.uix.widget import Widget
 import plotter
 import random
 import math
 
+class MainView(Widget):
+    pass
+
 
 class PlotterApp(App):
     def build(self):
-        self.plotter = plotter.Plotter()
+        view=MainView()
+        self.plotter = view.plotter
         Clock.schedule_interval(self.make_plot,0.5)
-        #Clock.schedule_interval(self.plotter.axes.do_fade,0.01)
-        return self.plotter
+        return view
         
     def make_plot(self,dt):
         scale=random.uniform(5,15)

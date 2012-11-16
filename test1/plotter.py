@@ -64,3 +64,6 @@ Factory.register('Axes', Axes)
 
 class Plotter(Widget):
     pass
+
+Factory.register('Plotter', Plotter)            
+    

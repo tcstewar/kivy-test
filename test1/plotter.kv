@@ -27,13 +27,30 @@
         Rectangle:
             pos: self.pos
             size: self.size
-                
+
+            
     axes: axes            
     Axes:
         id: axes
         margin: 50        
-        pos: self.parent.x+self.margin, self.parent.y+self.margin
-        size: self.parent.width-self.margin*2, self.parent.height-self.margin*2
+        pos: root.x+self.margin, self.parent.y+self.margin
+        size: root.width-self.margin*2, self.parent.height-self.margin*2
+        #size: 400,400
 
-            
+<MainView>:
+
+    plotter: plotter
+    BoxLayout:
+        orientation: 'horizontal'
+        size: root.size
+        
+        Slider:
+            min: -10
+            max:  10
+            size_hint: (None, 0.2)
+            width: 200
+                
+        Plotter:
+            id: plotter
+            size_hint: (0.8, 1.0)
 
