@@ -12,8 +12,8 @@ class LineInfo:
         self.color=Color(hue, 1, 1, mode='hsv')
         self.line=Line(points=self.compute_points(), width=2)
             
+        axes.canvas.insert(axes.canvas.length()-1,self.line)
         axes.canvas.insert(axes.canvas.length()-1,self.color)
-        axes.canvas.insert(axes.canvas.length(),self.line)
     def compute_points(self):
         pts=[]
         miny=self.axes.min_y
