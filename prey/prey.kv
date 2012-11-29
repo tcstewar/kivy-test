@@ -29,6 +29,11 @@
             pos: (self.x, self.center_y - 18) if self.orientation == 'horizontal' else (self.center_x - 18, self.y)
             size: (self.width, 37) if self.orientation == 'horizontal' else (37, self.height)
             source: 'atlas://data/images/defaulttheme/slider%s_background' % self.orientation[0]
+        BorderImage:
+            border: [int(min(self.width * (self.value2_normalized-self.value1_normalized), 12))] * 4
+            pos: self.x + self.width*self.value1_normalized, self.center_y - 12
+            size: self.width * (self.value2_normalized-self.value1_normalized), 24
+            source: 'atlas://data/images/defaulttheme/progressbar'
         Rectangle:
             pos: (self.value1_pos[0] - 16, self.center_y - 17) if self.orientation == 'horizontal' else (self.center_x - 16, self.value1_pos[1] - 16)
             size: (32, 32)
@@ -37,19 +42,22 @@
             pos: (self.value2_pos[0] - 16, self.center_y - 17) if self.orientation == 'horizontal' else (self.center_x - 16, self.value2_pos[1] - 16)
             size: (32, 32)
             source: 'atlas://data/images/defaulttheme/slider_cursor'
+
+            
+            
     Label:
-        pos: root.pos[0],root.pos[1]+20
+        pos: root.pos[0],root.pos[1]+24
         size: root.size
         text: root.label      
         valign: 'top'
         halign: 'center'  
     
     Label:
-        pos: root.value1_pos[0]-root.size[0]/2, root.value1_pos[1]-20
+        pos: root.value1_pos[0]-root.size[0]/2, root.value1_pos[1]-24
         size: root.size
         text: '%1.2f'%root.value1
     Label:
-        pos: root.value2_pos[0]-root.size[0]/2, root.value2_pos[1]-20
+        pos: root.value2_pos[0]-root.size[0]/2, root.value2_pos[1]-24
         size: root.size
         text: '%1.2f'%root.value2
 
