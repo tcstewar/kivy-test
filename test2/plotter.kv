@@ -1,0 +1,96 @@
+#:kivy 1.0
+
+<Axes>:
+    canvas:
+        StencilPush
+        
+        Rectangle:
+            pos: self.pos
+            size: self.size
+                
+        StencilUse
+            
+    
+        Color:
+            rgb: 1, 1, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size   
+            
+        StencilPop     
+
+<Slider2>:
+    padding: 15
+    canvas:
+        Color:
+            rgb: 1, 1, 1
+        BorderImage:
+            border: (0, 18, 0, 18) if self.orientation == 'horizontal' else (18, 0, 18, 0)
+            pos: (self.x, self.center_y - 18) if self.orientation == 'horizontal' else (self.center_x - 18, self.y)
+            size: (self.width, 37) if self.orientation == 'horizontal' else (37, self.height)
+            source: 'atlas://data/images/defaulttheme/slider%s_background' % self.orientation[0]
+        Rectangle:
+            pos: (self.value1_pos[0] - 16, self.center_y - 17) if self.orientation == 'horizontal' else (self.center_x - 16, self.value1_pos[1] - 16)
+            size: (32, 32)
+            source: 'atlas://data/images/defaulttheme/slider_cursor'
+        Rectangle:
+            pos: (self.value2_pos[0] - 16, self.center_y - 17) if self.orientation == 'horizontal' else (self.center_x - 16, self.value2_pos[1] - 16)
+            size: (32, 32)
+            source: 'atlas://data/images/defaulttheme/slider_cursor'
+    Label:
+        pos: root.pos[0],root.pos[1]+20
+        size: root.size
+        text: root.label      
+        valign: 'top'
+        halign: 'center'  
+    
+    Label:
+        pos: root.value1_pos[0]-25, root.value1_pos[1]+10
+        size: 50, 50
+        text: '%1.2f'%root.value1
+    Label:
+        pos: root.value2_pos[0]-25, root.value2_pos[1]+10
+        size: 50, 50
+        text: '%1.2f'%root.value2
+
+
+
+<Plotter>:
+    canvas:
+        Color:
+            rgb: .5, .5, .5
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+            
+    axes: axes            
+    Axes:
+        id: axes
+        margin: 50        
+        pos: root.x+self.margin, self.parent.y+self.margin
+        size: root.width-self.margin*2, self.parent.height-self.margin*2
+        #size: 400,400
+
+<MainView>:
+
+    slider:slider
+    plotter: plotter
+    BoxLayout:
+        orientation: 'horizontal'
+        size: root.size
+        
+        Slider2:
+            id:slider
+            label: 'freq'
+            min: 5
+            max: 15
+            value1: 10
+            value2: 10
+            size_hint: (None, 0.2)
+            width: 200
+                
+        Plotter:
+            id: plotter
+            size_hint: (0.8, 1.0)
+
