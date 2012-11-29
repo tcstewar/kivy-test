@@ -129,10 +129,30 @@ class Slider2(Widget):
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):
             touch.grab(self)
-            touch.ud['item']=self.find_closest_pos(*touch.pos)
+            if touch.button=='scrolldown' or touch.button=='scrollup':
+                touch.ud['item']=None
+                v1=self.value1_normalized
+                v2=self.value2_normalized
+                vc=(v1+v2)/2
+                dv=vc-v1
+                if touch.button=='scrollup': 
+                    dv-=0.1
+                    if dv<0: dv=0
+                elif touch.button=='scrolldown':
+                    dv+=0.1
+                    if dv>0.5: dv=0.5
+                    if vc-dv<0: vc=dv
+                    if vc+dv>1: vc=1-dv
+                self.value1_normalized=vc-dv
+                self.value2_normalized=vc+dv
+                
+            else:        
+                touch.ud['item']=self.find_closest_pos(*touch.pos)
+                    
+                
             if touch.ud['item']=='1':
                 self.value1_pos = touch.pos
-            else:
+            elif touch.ud['item']=='2':
                 self.value2_pos = touch.pos
                             
             return True
@@ -141,7 +161,7 @@ class Slider2(Widget):
         if touch.grab_current == self:
             if touch.ud['item']=='1':
                 self.value1_pos = touch.pos
-            else:
+            elif touch.ud['item']=='2':
                 self.value2_pos = touch.pos
             return True
 
@@ -149,7 +169,7 @@ class Slider2(Widget):
         if touch.grab_current == self:
             if touch.ud['item']=='1':
                 self.value1_pos = touch.pos
-            else:
+            elif touch.ud['item']=='2':
                 self.value2_pos = touch.pos
             return True
             
