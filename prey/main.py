@@ -2,7 +2,7 @@ from kivy.app import App
 from kivy.clock import Clock
 from kivy.uix.widget import Widget
 from kivy.properties import NumericProperty, ListProperty
-
+from kivy.animation import Animation
 import plotter
 import random
 import math
@@ -16,6 +16,8 @@ class Model:
     def __init__(self, module):
         self.module=module
         self.sliders={}
+        self.lines=[]
+        self.seed=0
     def make_sliders(self, widget, on_change):
         argspec=inspect.getargspec(self.module.model)
         for i,arg in enumerate(argspec.args):
@@ -29,17 +31,47 @@ class Model:
             self.sliders[arg]=slider
             widget.add_widget(slider)
             slider.bind(value1=on_change, value2=on_change)
-    def generate_data(self):
+    def generate_data(self, seed):
+        random.seed(seed)
         args={}
         for arg,slider in self.sliders.items():
             args[arg]=random.uniform(slider.value1,slider.value2)
-        return self.module.model(**args)    
+        return self.module.model(**args)
+
+    def add_dataset(self,axes):
+        data=self.generate_data(self.seed)
+        lines={}
+        for key, hue in self.module.colors.items():
+            li=axes.plot(data[key],hue)
+            lines[key]=li
+        self.lines.append((self.seed, lines))    
+        self.seed+=1
         
+        if len(self.lines)>1:
+            for li in self.lines[-2][1].values():
+                axes.fade(li)
+            
+        
+        if len(self.lines)>3:
+            for li in self.lines[-4][1].values():
+                axes.remove_plot(li)
+                
+            while (self.lines[0][1].values()[0].removed):
+                del self.lines[0]
+        
+    def recompute(self):
+        for seed, lines in self.lines:
+            data=self.generate_data(seed)
+            for key,line in lines.items():
+                line.data=data[key]
+                line.recompute()
+                
         
 
 
 class MainView(Widget):
     scale = ListProperty([1.0, 1.0])
+    change_timer = NumericProperty(0)
     
     def __init__(self, **kwargs):
         super(MainView, self).__init__(**kwargs)
@@ -50,7 +82,9 @@ class MainView(Widget):
 
     
     def on_slider_changed(self,obj,value):
-        pass
+        self.model.recompute()
+        self.change_timer=1
+        Animation(change_timer=0, duration=2.0).start(self)
     
 
 
@@ -63,12 +97,8 @@ class PreyApp(App):
         return self.view
         
     def make_plot(self,dt):
-        data=self.view.model.generate_data()
-        #x0=random.uniform(self.view.x0.value1, self.view.x0.value2)
-        #y0=random.uniform(self.view.y0.value1, self.view.y0.value2)
-        #data=prey.model(x0=x0,y0=y0)
-        self.plotter.axes.plot(data['x'], 0 ) 
-        self.plotter.axes.plot(data['y'], 0.7 ) 
+        if self.view.change_timer==0:
+            self.view.model.add_dataset(self.plotter.axes)
         
 if __name__=='__main__':
     PreyApp().run()
