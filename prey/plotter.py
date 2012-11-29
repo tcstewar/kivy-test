@@ -52,7 +52,7 @@ class Axes(Widget):
     def do_fade(self,dt):
         for line in self.lines[:-2]:
             line.color.s-=0.1
-        while len(self.lines)>0 and self.lines[0].color.s<0.5:
+        while len(self.lines)>0 and self.lines[0].color.s<0.05:
             self.canvas.remove(self.lines[0].line)
             self.canvas.remove(self.lines[0].color)
             del self.lines[0]
